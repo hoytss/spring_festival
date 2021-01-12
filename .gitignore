@@ -7,4 +7,5 @@ node_modules/
 *.ntvs*
 *.njsproj
 *.sln
-.dist
+dist
+.history
