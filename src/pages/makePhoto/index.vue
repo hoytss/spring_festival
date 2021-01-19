@@ -13,7 +13,7 @@ import { deploymentList } from '../../api/makephoto'
 export default {
   name: "home",
   components: {
-    vanButton: Button,
+    [Button.name]: Button,
   },
   props: {
     msg: String,
