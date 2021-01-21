@@ -6,3 +6,10 @@ export function deploymentList(type, params) {
         contentType: 'application/json;charset=utf-8'
     })
 }
+
+export function uploadFile(type, params) {
+    return httpData(type,`/api/swap`, {
+        queryParams: params,
+        contentType: 'multipart/form-data'
+    })
+}
