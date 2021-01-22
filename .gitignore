@@ -9,3 +9,4 @@ node_modules/
 *.sln
 dist
 .history
+yarn.lock
