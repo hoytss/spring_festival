@@ -1,20 +1,40 @@
 <template>
 	<div class="make-photo">
-		<!-- <van-button type="default" @click="nextStep">第一步</van-button> -->
-		<van-image :src="bodyPhoto" class="temp" @click="nextStep" />
+		<!-- <van-image :src="bodyPhoto" class="temp" @click="nextStep" />
 		<van-uploader :after-read="afterRead" @click="setup" />
-		<!-- <van-image :src="name111" class="temp" /> -->
 		<img :src="name111" class="temp" />
-		{{ name111 }}
+		{{ name111 }} -->
+		<!-- 两端对齐 -->
+		<van-row justify="space-between">
+			<img :src="gobackBtn" class="top-btn" />
+			<!-- <van-col span="6">
+				
+			</van-col> -->
+			<img :src="nextpage" class="top-btn" />
+			<!-- <van-col span="6">
+				
+			</van-col> -->
+		</van-row>
+		<van-row style="min-height:60%;background:red">
+
+		</van-row>
+		<van-row justify="space-between">
+			<van-col span="6">
+				
+			</van-col>
+			<van-col span="18">111</van-col>
+		</van-row>
 	</div>
 </template>
 
 <script>
-import { Button, Image, Uploader } from "vant";
+import { Button, Image, Uploader, Row } from "vant";
 import { ref, toRefs, reactive } from "vue";
 import router from "../../../router/routes";
-import { deploymentList, uploadFile } from "../../api/makephoto";
-import photo from "../../assets/images/make_head.jpg";
+import { deploymentList, uploadFile } from "@/api/makephoto";
+import photo from "@/assets/images/make_head.jpg";
+import Goback from "@/assets/images/makePhoto/goback.png";
+import NextPage from "@/assets/images/makePhoto/nextpage.png";
 
 export default {
 	name: "home",
@@ -22,9 +42,12 @@ export default {
 		[Button.name]: Button,
 		[Image.name]: Image,
 		[Uploader.name]: Uploader,
+		[Row.name]: Row,
 	},
 	data() {
 		return {
+			gobackBtn: Goback,
+			nextpage: NextPage,
 			bodyPhoto: photo,
 			newSrc: null,
 		};
@@ -33,6 +56,7 @@ export default {
 		msg: String,
 	},
 	mounted() {
+		// 注释掉测试用接口
 		this.getTest();
 	},
 	setup() {
@@ -78,16 +102,16 @@ export default {
 			let params = new FormData();
 			params.append("file", getFile);
 			uploadFile("post", params).then((res) => {
-        console.log(res);
-        name111.value = `data:image/png;base64,${res.data.img}`;
+				console.log(res);
+				name111.value = `data:image/png;base64,${res.data.img}`;
 				// this.newSrc = res.data.img
 			});
 		};
 
 		return {
 			...refData, // 你也可以直接在这里用...toRefs(data) 这样会简单点
-      name111,
-      afterRead
+			name111,
+			afterRead,
 		};
 
 		// return {
@@ -112,9 +136,15 @@ export default {
 
 <style lang="less" scoped>
 .make-photo {
+	background-color: #f3d4cb;
+	height: 100%;
 	.temp {
 		width: 80%;
 		margin: 0 auto;
+	}
+	.top-btn {
+		width: 22%;
+		margin: 1.25rem;
 	}
 }
 </style>

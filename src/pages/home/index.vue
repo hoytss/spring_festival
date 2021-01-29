@@ -3,24 +3,30 @@
 		<!-- <van-button type="default" @click="nextStep">开始制作</van-button> -->
 		<!-- <van-image :src=bg class="temp" @click="nextStep"/> -->
 		<div class="door-wrap">
-      <van-field v-model="value" class="why-num" readonly clickable @touchstart.stop="show = true" />
-      <van-number-keyboard
-        v-model="value"
-        :show="show"
-        :maxlength="2"
-        @blur="show = false"
-        close-button-text="完成"
-      />
+			<van-field
+				v-model="value"
+				class="why-num"
+				readonly
+				clickable
+				@touchstart.stop="show = true"
+			/>
+			<van-number-keyboard
+				v-model="value"
+				:show="show"
+				:maxlength="2"
+				@blur="show = false"
+				close-button-text="完成"
+			/>
 			<div class="title">
 				<van-image :src="title" />
 			</div>
-      <div class="horizontal-batch">
-        <van-image :src="Light" />
-      </div>
+			<div class="horizontal-batch">
+				<van-image :src="Light" />
+			</div>
 			<div class="door-open">
 				<div class="door-left" @click="openTheDoor('left')">
 					<div class="couplet-left">
-            <div class="img" :style="openDoorLeft">
+						<div class="img" :style="openDoorLeft">
 							<van-image :src="coupletLeft" />
 						</div>
 					</div>
@@ -32,7 +38,7 @@
 				</div>
 				<div class="door-right" @click="openTheDoor('right')">
 					<div class="couplet-right">
-            <div class="img" :style="openDoorRight">
+						<div class="img" :style="openDoorRight">
 							<van-image :src="coupletRight" />
 						</div>
 					</div>
@@ -43,28 +49,28 @@
 					</div>
 				</div>
 			</div>
-      <div class="door-firecracker">
-        <van-image :src="firecracker" />
-      </div>
-      <div class="door-cloud">
-        <van-image :src="cloud" />
-      </div>
+			<div class="door-firecracker">
+				<van-image :src="firecracker" />
+			</div>
+			<div class="door-cloud">
+				<van-image :src="cloud" />
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
 import { Button, Image, Dialog, NumberKeyboard, Field } from "vant";
-import { ref } from 'vue';
+import { ref } from "vue";
 import router from "../../../router/routes";
-import doorLeftImg from "../../assets/images/home/door_right.png";
-import doorRightImg from "../../assets/images/home/door_left.png";
-import LightImg from "../../assets/images/home/light.png";
-import Title from "../../assets/images/home/title.png";
-import Cloud from "../../assets/images/home/cloud.png";
-import Firecracker from "../../assets/images/home/firecracker.png";
-import coupletLeftImg from "../../assets/images/home/nianyefan.png";
-import coupletRightImg from "../../assets/images/home/quanjiafu.png";
+import doorLeftImg from "@/assets/images/home/door_right.png";
+import doorRightImg from "@/assets/images/home/door_left.png";
+import LightImg from "@/assets/images/home/light.png";
+import Title from "@/assets/images/home/title.png";
+import Cloud from "@/assets/images/home/cloud.png";
+import Firecracker from "@/assets/images/home/firecracker.png";
+import coupletLeftImg from "@/assets/images/home/nianyefan.png";
+import coupletRightImg from "@/assets/images/home/quanjiafu.png";
 
 export default {
 	name: "home",
@@ -74,28 +80,28 @@ export default {
 		[Dialog.Component.name]: Dialog.Component,
 		[NumberKeyboard.name]: NumberKeyboard,
 		[Field.name]: Field,
-  },
-  setup() {
-    const show = ref(false);
-    const value = ref('');
-    return {
-      show,
-      value,
-    };
-  },
+	},
+	setup() {
+		const show = ref(false);
+		const value = ref("");
+		return {
+			show,
+			value,
+		};
+	},
 	data() {
 		return {
 			doorLeft: doorLeftImg,
 			doorRight: doorRightImg,
-      Light: LightImg,
-      title: Title,
-      cloud: Cloud,
-      firecracker: Firecracker,
+			Light: LightImg,
+			title: Title,
+			cloud: Cloud,
+			firecracker: Firecracker,
 			coupletLeft: coupletLeftImg,
 			coupletRight: coupletRightImg,
 			openDoorLeft: {},
 			openDoorRight: {},
-      homeNum: null,
+			homeNum: null,
 		};
 	},
 	props: {
@@ -108,40 +114,39 @@ export default {
 		},
 		// 选择类型+开门
 		openTheDoor(arg) {
-      // 检测是否选择家庭人数
-      if(this.value === '') {
-        Dialog.alert({
-          message: "请先选择家庭人数哦～",
-        }).then(() => {
-          // on close
-          return
-        });
-      }else{
-        this.openDoorLeft = {
-          opacity: 0,
-          "*filter": "alpha(opacity=0)",
-          filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)",
-          transform: "perspective(600px) rotateY(90deg)",
-          "-webkit-transform": "perspective(600px) rotateY(90deg)",
-          "-moz-transform": "perspective(600px) rotateY(90deg)",
-        };
-        this.openDoorRight = {
-          opacity: 0,
-          "*filter": "alpha(opacity=0)",
-          filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)",
-          transform: "perspective(600px) rotateY(-90deg)",
-          "-webkit-transform": "perspective(600px) rotateY(-90deg)",
-          "-moz-transform": "perspective(600px) rotateY(-90deg)",
-        };
-        // 根据arg参数判断条件跳转
+			// 检测是否选择家庭人数
+			if (this.value === "") {
+				Dialog.alert({
+					message: "请先选择家庭人数哦～",
+				}).then(() => {
+					// on close
+					return;
+				});
+			} else {
+				this.openDoorLeft = {
+					opacity: 0,
+					"*filter": "alpha(opacity=0)",
+					filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)",
+					transform: "perspective(600px) rotateY(90deg)",
+					"-webkit-transform": "perspective(600px) rotateY(90deg)",
+					"-moz-transform": "perspective(600px) rotateY(90deg)",
+				};
+				this.openDoorRight = {
+					opacity: 0,
+					"*filter": "alpha(opacity=0)",
+					filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)",
+					transform: "perspective(600px) rotateY(-90deg)",
+					"-webkit-transform": "perspective(600px) rotateY(-90deg)",
+					"-moz-transform": "perspective(600px) rotateY(-90deg)",
+				};
+				// 根据arg参数判断条件跳转
 
-        // 开完门之后进入下一页
-        setTimeout(() => {
-          this.nextStep();
-        }, 2000);
-      }
+				// 开完门之后进入下一页
+				setTimeout(() => {
+					this.nextStep();
+				}, 2000);
+			}
 			console.log(arg);
-
 		},
 	},
 };
@@ -158,32 +163,32 @@ export default {
 		height: 100%;
 		background-image: url("~@/assets/images/home/base_bg.png");
 		background-repeat: no-repeat;
-    background-size: 100% 100%; /* 背景图片宽度为容器宽度的100%，高度为容器高度的100% */
-    position: relative;
-    .why-num {
-      position: absolute;
-      width: 65px;
-      background: border-box;
-      right: 21%;
-      top: 24%;
-      z-index: 200;
-    }
+		background-size: 100% 100%; /* 背景图片宽度为容器宽度的100%，高度为容器高度的100% */
+		position: relative;
+		.why-num {
+			position: absolute;
+			width: 65px;
+			background: border-box;
+			right: 21%;
+			top: 24%;
+			z-index: 200;
+		}
 		.horizontal-batch {
 			position: absolute;
 			top: 20%;
-    }
-    .title {
+		}
+		.title {
 			position: absolute;
 			top: 11%;
 		}
 		.door-open {
 			display: flex;
-      justify-content: center;
-      width: 81%;
-      position: absolute;
-      bottom: 9%;
-      left: 50%;
-      margin-left: -40.5%;
+			justify-content: center;
+			width: 81%;
+			position: absolute;
+			bottom: 9%;
+			left: 50%;
+			margin-left: -40.5%;
 			.door-left {
 				position: relative;
 				.couplet-left {
@@ -191,8 +196,8 @@ export default {
 					width: 68px;
 					z-index: 18;
 					left: 22px;
-          top: 28px;
-          .img {
+					top: 28px;
+					.img {
 						transition: all 3s;
 						-moz-transition: all 3s;
 						-webkit-transition: all 3s;
@@ -229,8 +234,8 @@ export default {
 					width: 68px;
 					z-index: 18;
 					right: 22px;
-          top: 28px;
-          .img {
+					top: 28px;
+					.img {
 						transition: all 3s;
 						-moz-transition: all 3s;
 						-webkit-transition: all 3s;
@@ -260,15 +265,15 @@ export default {
 					}
 				}
 			}
-    }
-    .door-cloud {
-      position: absolute;
-      bottom: -6px;
-    }
-    .door-firecracker {
-      position: absolute;
-      top: 231px;
-    }
+		}
+		.door-cloud {
+			position: absolute;
+			bottom: -6px;
+		}
+		.door-firecracker {
+			position: absolute;
+			top: 231px;
+		}
 	}
 }
 </style>
