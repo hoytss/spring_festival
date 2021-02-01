@@ -6,23 +6,62 @@
 		{{ name111 }} -->
 		<!-- 两端对齐 -->
 		<van-row justify="space-between">
-			<img :src="gobackBtn" class="top-btn" />
+			<img :src="gobackBtn" class="top-btn" @click="goBack" />
 			<!-- <van-col span="6">
 				
 			</van-col> -->
-			<img :src="nextpage" class="top-btn" />
+			<img :src="nextpage" class="top-btn" @click="nextStep" />
 			<!-- <van-col span="6">
 				
 			</van-col> -->
 		</van-row>
-		<van-row style="min-height:60%;background:red">
+		<van-row style="min-height: 68%; background: red;">
+			
 
+			<!-- 切换性别 -->
+			<div>
+				<img :src="woman" class="top-btn" @click="chooseSex(true)" v-if="sexSet===false"/>
+				<img :src="man" class="top-btn" @click="chooseSex(false)" v-else/>
+			</div>
 		</van-row>
-		<van-row justify="space-between">
-			<van-col span="6">
-				
+		<van-row justify="flex-start">
+			<van-col span="2" class="part-wrap">
+				<img :src="hair" class="part" @click="selectPart(1)" />
+				<img :src="coat" class="part" @click="selectPart(2)" />
+				<img :src="pants" class="part" @click="selectPart(3)" />
+				<img :src="accessories" class="part" @click="selectPart(4)" />
 			</van-col>
-			<van-col span="18">111</van-col>
+			<van-col span="18" class="part-details-wrap">
+				<div>
+					<img :src="hair" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+
+				</div>
+				<div>
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+					<img :src="coat" class="part" @click="selectPart" />
+
+				</div>
+<!-- 				
+				<img :src="hair" class="part" @click="selectPart" />
+				<img :src="coat" class="part" @click="selectPart" />
+				<img :src="coat" class="part" @click="selectPart" />
+				<img :src="coat" class="part" @click="selectPart" />
+				<img :src="coat" class="part" @click="selectPart" />
+				<img :src="coat" class="part" @click="selectPart" /> -->
+			</van-col>
 		</van-row>
 	</div>
 </template>
@@ -36,6 +75,13 @@ import photo from "@/assets/images/make_head.jpg";
 import Goback from "@/assets/images/makePhoto/goback.png";
 import NextPage from "@/assets/images/makePhoto/nextpage.png";
 
+import Hair from "@/assets/images/makePhoto/hair.png";
+import Coat from "@/assets/images/makePhoto/coat.png";
+import Pants from "@/assets/images/makePhoto/pants.png";
+import Accessories from "@/assets/images/makePhoto/accessories.png";
+
+import Man from "@/assets/images/makePhoto/man.png";
+import Woman from "@/assets/images/makePhoto/woman.png";
 export default {
 	name: "home",
 	components: {
@@ -50,6 +96,13 @@ export default {
 			nextpage: NextPage,
 			bodyPhoto: photo,
 			newSrc: null,
+			hair: Hair,
+			coat: Coat,
+			pants: Pants,
+			accessories: Accessories,
+			man: Man,
+			woman: Woman,
+			sexSet: true
 		};
 	},
 	props: {
@@ -120,16 +173,28 @@ export default {
 		// };
 	},
 	methods: {
+		goBack() {
+			router.push("/home");
+		},
 		nextStep() {
-			console.log("xiayibu");
 			router.push("/generate");
 		},
 		async getTest() {
-			console.log("吊影");
 			await deploymentList("post", { name: "jhon", age: "18" }).then((res) => {
 				console.log(res);
 			});
 		},
+		// 选择配件 展示详细
+		selectPart(id) {
+			console.log(id);
+			// 调接口展示配件详细图片
+		},
+		// 选择性别
+		chooseSex(arg) {
+			console.log(arg);
+			this.sexSet = arg;
+			console.log(this.sexSet);
+		}
 	},
 };
 </script>
@@ -145,6 +210,36 @@ export default {
 	.top-btn {
 		width: 22%;
 		margin: 1.25rem;
+	}
+	.part-wrap {
+		display: flex;
+		flex-flow: wrap;
+		width: 36%;
+		border-right: 1px solid red;
+		justify-content: center;
+		.part {
+			display: inline-block;
+			width: 40%;
+			padding: 4px;
+		}
+	}
+	.part-details-wrap {
+		display: flex;
+		flex-flow: wrap;
+		width: 63%;
+		border-left: 1px solid green;
+		justify-content: flex-start;
+		overflow-x: auto;
+		div {
+			width: 100%;
+			display: flex;
+			justify-content: flex-start;
+		}
+		.part {
+			display: inline-block;
+			width: 22%;
+			padding: 4px;
+		}
 	}
 }
 </style>
