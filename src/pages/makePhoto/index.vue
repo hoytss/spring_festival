@@ -17,7 +17,6 @@
 		</van-row>
 		<van-row style="min-height: 68%; background: red;">
 			
-
 			<!-- 切换性别 -->
 			<div>
 				<img :src="woman" class="top-btn" @click="chooseSex(true)" v-if="sexSet===false"/>
