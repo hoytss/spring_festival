@@ -8,20 +8,28 @@
 		<van-row justify="space-between">
 			<img :src="gobackBtn" class="top-btn" @click="goBack" />
 			<!-- <van-col span="6">
-				
 			</van-col> -->
 			<img :src="nextpage" class="top-btn" @click="nextStep" />
 			<!-- <van-col span="6">
 				
 			</van-col> -->
 		</van-row>
-		<van-row style="min-height: 68%; background: red;">
+		<van-row style="min-height: 68%;position:relative" class="body-wrap">
 			
 			<!-- 切换性别 -->
-			<div>
+			<!-- <div>
 				<img :src="woman" class="top-btn" @click="chooseSex(true)" v-if="sexSet===false"/>
 				<img :src="man" class="top-btn" @click="chooseSex(false)" v-else/>
-			</div>
+			</div> -->
+			<van-col span="24" class="head">
+				<img :src="head" class="" />
+			</van-col>
+			<van-col span="24" class="top" >
+				<img :src="top" class="" />
+			</van-col>
+			<van-col span="24" class="bottom" >
+				<img :src="bottom" class="" />
+			</van-col>
 		</van-row>
 		<van-row justify="flex-start">
 			<van-col span="2" class="part-wrap">
@@ -81,6 +89,11 @@ import Accessories from "@/assets/images/makePhoto/accessories.png";
 
 import Man from "@/assets/images/makePhoto/man.png";
 import Woman from "@/assets/images/makePhoto/woman.png";
+
+import Head from "@/assets/images/makePhoto/test_head.png";
+import Top from "@/assets/images/makePhoto/test_top.png";
+import Bottom from "@/assets/images/makePhoto/test_bottom.png";
+
 export default {
 	name: "home",
 	components: {
@@ -101,7 +114,10 @@ export default {
 			accessories: Accessories,
 			man: Man,
 			woman: Woman,
-			sexSet: true
+			sexSet: true,
+			head: Head,
+			top: Top,
+			bottom: Bottom
 		};
 	},
 	props: {
@@ -207,7 +223,7 @@ export default {
 		margin: 0 auto;
 	}
 	.top-btn {
-		width: 22%;
+		width: 6.25rem;
 		margin: 1.25rem;
 	}
 	.part-wrap {
@@ -218,7 +234,8 @@ export default {
 		justify-content: center;
 		.part {
 			display: inline-block;
-			width: 40%;
+			width: 3rem;
+			height: 3rem;
 			padding: 4px;
 		}
 	}
@@ -236,8 +253,35 @@ export default {
 		}
 		.part {
 			display: inline-block;
-			width: 22%;
+			width: 3rem;
+			height: 3rem;
 			padding: 4px;
+		}
+	}
+	.body-wrap {
+		.head {
+			width: 100%;
+			img {
+				width: 66%;
+				position: relative;
+				z-index: 6;
+			}
+		}
+		.top {
+			img {
+				width: 50%;
+				position: relative;
+				z-index: 5;
+				top: -14px;
+			}
+		}
+		.bottom {
+			img {
+				width: 50%;
+				position: relative;
+				z-index: 4;
+				top: -86px;
+			}
 		}
 	}
 }
