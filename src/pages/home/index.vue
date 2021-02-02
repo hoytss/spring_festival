@@ -176,33 +176,39 @@ export default {
 		.horizontal-batch {
 			position: absolute;
 			top: 20%;
+			z-index: 20;
 		}
 		.title {
 			position: absolute;
 			top: 11%;
+			z-index: 21;
 		}
 		.door-open {
 			display: flex;
 			justify-content: center;
 			width: 81%;
 			position: absolute;
-			bottom: 9%;
 			left: 50%;
 			margin-left: -40.5%;
+			height: 85%;
+			top: 19%;
 			.door-left {
 				position: relative;
+				height: 83%;
 				.couplet-left {
 					position: absolute;
 					width: 68px;
 					z-index: 18;
 					left: 22px;
-					top: 28px;
+					top: 11.75rem;
+					height: 100%;
 					.img {
 						transition: all 3s;
 						-moz-transition: all 3s;
 						-webkit-transition: all 3s;
 						position: relative;
 						bottom: 0;
+						height: 100%;
 						transform-origin: left;
 						-moz-transform-origin: left;
 						-webkit-transform-origin: left;
@@ -212,7 +218,12 @@ export default {
 					}
 				}
 				.open-left {
+					height: 100%;
 					.img {
+						.van-image {
+							height: 100%;
+						}
+						height: 100%;
 						transition: all 3s;
 						-moz-transition: all 3s;
 						-webkit-transition: all 3s;
@@ -229,13 +240,16 @@ export default {
 			}
 			.door-right {
 				position: relative;
+				height: 83%;
 				.couplet-right {
+					height: 100%;
 					position: absolute;
 					width: 68px;
 					z-index: 18;
 					right: 22px;
-					top: 28px;
+					top: 11.75rem;
 					.img {
+						height: 100%;
 						transition: all 3s;
 						-moz-transition: all 3s;
 						-webkit-transition: all 3s;
@@ -250,7 +264,12 @@ export default {
 					}
 				}
 				.open-right {
+					height: 100%;
 					.img {
+						height: 100%;
+						.van-image {
+							height: 100%;
+						}
 						transition: all 3s;
 						-moz-transition: all 3s;
 						-webkit-transition: all 3s;
