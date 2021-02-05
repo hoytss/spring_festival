@@ -97,6 +97,15 @@ module.exports = {
         pathRewrite: {
           '^/api': ''// 请求数据路径别名,这里是注意将static/mock放入public文件夹
         }
+      },
+      '/images': {
+        target: 'http://39.106.93.128:8080/',
+        changeOrigin: true,
+        secure: false,
+        //ws:true,
+        pathRewrite: {
+          // '^/images': ''// 请求数据路径别名,这里是注意将static/mock放入public文件夹
+        }
       }
     },
     // before: app => { }
