@@ -14,60 +14,52 @@
 				
 			</van-col> -->
 		</van-row>
-		<van-row style="min-height: 68%;position:relative" class="body-wrap">
-			
+		<van-row style="min-height: 68%; position: relative;" class="body-wrap">
+			<section style="height: 100%; position: relative;" ref="sourceImg">
+				<div class="head">
+					<img :src="head" class="" />
+				</div>
+				<div class="top">
+					<img :src="top" class="" />
+				</div>
+				<div class="bottom">
+					<img :src="bottom" class="" />
+				</div>
+			</section>
+
 			<!-- 切换性别 -->
 			<!-- <div>
-				<img :src="woman" class="top-btn" @click="chooseSex(true)" v-if="sexSet===false"/>
-				<img :src="man" class="top-btn" @click="chooseSex(false)" v-else/>
+				<img :src="woman" class="top-btn" @click="chooseSex(1)" v-if="sexSet===0"/>
+				<img :src="man" class="top-btn" @click="chooseSex(0)" v-else/>
 			</div> -->
-			<van-col span="24" class="head">
-				<img :src="head" class="" />
-			</van-col>
-			<van-col span="24" class="top" >
-				<img :src="top" class="" />
-			</van-col>
-			<van-col span="24" class="bottom" >
-				<img :src="bottom" class="" />
-			</van-col>
 		</van-row>
+
 		<van-row justify="flex-start">
 			<van-col span="2" class="part-wrap">
-				<img :src="hair" class="part" @click="selectPart(1)" />
-				<img :src="coat" class="part" @click="selectPart(2)" />
-				<img :src="pants" class="part" @click="selectPart(3)" />
-				<img :src="accessories" class="part" @click="selectPart(4)" />
+				<img :src="hair" class="part" @click="selectPart('head')" />
+				<img :src="coat" class="part" @click="selectPart('top')" />
+				<img :src="pants" class="part" @click="selectPart('bottom')" />
+				<img :src="accessories" class="part" @click="selectPart('head')" />
 			</van-col>
 			<van-col span="18" class="part-details-wrap">
 				<div>
-					<img :src="hair" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-
+					<img
+						v-for="item in firstRow"
+						:key="item.part_id"
+						class="part"
+						:src="item.thumbnailUrl"
+						@click="addPartInTemplate(item)"
+					/>
 				</div>
 				<div>
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-					<img :src="coat" class="part" @click="selectPart" />
-
+					<img
+						v-for="item in secondRow"
+						:key="item.part_id"
+						class="part"
+						:src="item.thumbnailUrl"
+						@click="addPartInTemplate(item)"
+					/>
 				</div>
-<!-- 				
-				<img :src="hair" class="part" @click="selectPart" />
-				<img :src="coat" class="part" @click="selectPart" />
-				<img :src="coat" class="part" @click="selectPart" />
-				<img :src="coat" class="part" @click="selectPart" />
-				<img :src="coat" class="part" @click="selectPart" />
-				<img :src="coat" class="part" @click="selectPart" /> -->
 			</van-col>
 		</van-row>
 	</div>
@@ -77,7 +69,8 @@
 import { Button, Image, Uploader, Row } from "vant";
 import { ref, toRefs, reactive } from "vue";
 import router from "../../../router/routes";
-import { deploymentList, uploadFile } from "@/api/makephoto";
+import { deploymentList, uploadFile, getImgPartList, saveTemplateInfo } from "@/api/makephoto";
+import html2canvas from "html2canvas";
 import photo from "@/assets/images/make_head.jpg";
 import Goback from "@/assets/images/makePhoto/goback.png";
 import NextPage from "@/assets/images/makePhoto/nextpage.png";
@@ -93,6 +86,9 @@ import Woman from "@/assets/images/makePhoto/woman.png";
 import Head from "@/assets/images/makePhoto/test_head.png";
 import Top from "@/assets/images/makePhoto/test_top.png";
 import Bottom from "@/assets/images/makePhoto/test_bottom.png";
+
+import Slhead1 from "@/assets/images/makePhoto/sl_head1.png";
+import Slhead2 from "@/assets/images/makePhoto/sl_head2.png";
 
 export default {
 	name: "home",
@@ -114,10 +110,14 @@ export default {
 			accessories: Accessories,
 			man: Man,
 			woman: Woman,
-			sexSet: true,
+			sexSet: 1,
 			head: Head,
 			top: Top,
-			bottom: Bottom
+			bottom: Bottom,
+			firstRow: [],
+			secondRow: [],
+			slhead1: Slhead1,
+			slhead2: Slhead2,
 		};
 	},
 	props: {
@@ -192,7 +192,30 @@ export default {
 			router.push("/home");
 		},
 		nextStep() {
-			router.push("/generate");
+			let that = this;
+			html2canvas(this.$refs.sourceImg, {
+				backgroundColor: null, // 背景颜色
+				dpi: 192, // 将分辨率提高到特定的dpi,默认值为96
+				scale: 2, // 用于渲染的比例尺。默认为浏览器设备像素比率。默认值是1，手机端设置成2
+				useCORS: true, // 是否尝试使用CORS从服务器加载图像
+			}).then(function (canvas) {
+				console.log(canvas);
+				let dataURL = canvas.toDataURL("image/png");
+				console.log(dataURL);
+
+				let params = {
+					head: that.head,
+					top: that.top,
+					bottom: that.bottom,
+					source_template: dataURL
+				}
+				
+				saveTemplateInfo("post", params).then((res) => {
+					console.log(res);
+					// router.push("/generate");
+				});
+			});
+			
 		},
 		async getTest() {
 			await deploymentList("post", { name: "jhon", age: "18" }).then((res) => {
@@ -200,8 +223,19 @@ export default {
 			});
 		},
 		// 选择配件 展示详细
-		selectPart(id) {
-			console.log(id);
+		async selectPart(args) {
+			// 读取性别
+			if (args) {
+				let params = { imgType: args, sex: this.sexSet };
+				await getImgPartList("post", params).then((res) => {
+					console.log(res);
+					if (res.code === 200) {
+						this.firstRow = res.data.first_row;
+						this.secondRow = res.data.second_row;
+					}
+				});
+			}
+
 			// 调接口展示配件详细图片
 		},
 		// 选择性别
@@ -209,7 +243,21 @@ export default {
 			console.log(arg);
 			this.sexSet = arg;
 			console.log(this.sexSet);
-		}
+		},
+		addPartInTemplate(args) {
+			if (args.type === 'head') {
+				this.head = args.artworkUrl
+			}else if(args.type === 'top') {
+				this.top = args.thumbnailUrl
+			}else if(args.type === 'bottom') {
+				this.bottom = args.thumbnailUrl
+			}
+			console.log(args.part_id)
+			console.log(args.thumbnailUrl)
+			console.log(args.type)
+			console.log(args.artworkUrl)
+			console.log(args.sex)
+		},
 	},
 };
 </script>
