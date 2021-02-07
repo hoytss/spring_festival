@@ -27,3 +27,17 @@ export function saveTemplateInfo(type, params) {
         contentType: 'application/json;charset=utf-8'
     })
 }
+// 读取选择的模板信息
+export function loadTemplateInfo(type, params) {
+    return httpData(type,`/api/bodyTemplate`, {
+        queryParams: params,
+        contentType: 'application/json;charset=utf-8'
+    })
+}
+// 执行人脸识别
+export function swapFace(type, params) {
+    return httpData(type,`/api/swapFace`, {
+        queryParams: params,
+        contentType: 'multipart/form-data'
+    })
+}
