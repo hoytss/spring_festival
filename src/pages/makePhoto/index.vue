@@ -33,7 +33,9 @@
 				<img :src="man" class="top-btn" @click="chooseSex(0)" v-else/>
 			</div> -->
 		</van-row>
-
+		<van-row>
+			<img :src="testImg" class="" />
+		</van-row>
 		<van-row justify="flex-start">
 			<van-col span="2" class="part-wrap">
 				<img :src="hair" class="part" @click="selectPart('head')" />
@@ -118,6 +120,7 @@ export default {
 			secondRow: [],
 			slhead1: Slhead1,
 			slhead2: Slhead2,
+			testImg: ''
 		};
 	},
 	props: {
@@ -202,6 +205,33 @@ export default {
 				console.log(canvas);
 				let dataURL = canvas.toDataURL("image/png");
 				console.log(dataURL);
+				// 转文件
+				// base64转blob
+				// const base64ToBlob = function(base64Data) {
+				// 	let arr = base64Data.split(','),
+				// 		fileType = arr[0].match(/:(.*?);/)[1],
+				// 		bstr = atob(arr[1]),
+				// 		l = bstr.length,
+				// 		u8Arr = new Uint8Array(l);
+						
+				// 	while (l--) {
+				// 		u8Arr[l] = bstr.charCodeAt(l);
+				// 	}
+				// 	return new Blob([u8Arr], {
+				// 		type: fileType
+				// 	});
+				// };
+				// // blob转file
+				// const blobToFile = function(newBlob, fileName) {
+				// 	newBlob.lastModifiedDate = new Date();
+				// 	newBlob.name = fileName;
+				// 	return newBlob;
+				// };
+				// // 调用
+				// const blob = base64ToBlob(dataURL);
+				// const file = blobToFile(blob, 'targetFile');
+				// console.log(blob);
+				// console.log(file);
 
 				let params = {
 					head: that.head,
@@ -211,8 +241,13 @@ export default {
 				}
 				
 				saveTemplateInfo("post", params).then((res) => {
-					console.log(res);
-					// router.push("/generate");
+					// console.log(res);
+					that.testImg = 'data:image/png;base64,'+res.data.transform_img
+					// console.log(that.testImg);
+					router.push({
+						name: "choosePhoto",
+						query: { targetTemplate: 'file'}
+					});
 				});
 			});
 			
@@ -248,9 +283,9 @@ export default {
 			if (args.type === 'head') {
 				this.head = args.artworkUrl
 			}else if(args.type === 'top') {
-				this.top = args.thumbnailUrl
+				this.top = args.artworkUrl
 			}else if(args.type === 'bottom') {
-				this.bottom = args.thumbnailUrl
+				this.bottom = args.artworkUrl
 			}
 			console.log(args.part_id)
 			console.log(args.thumbnailUrl)

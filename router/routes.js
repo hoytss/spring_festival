@@ -4,6 +4,7 @@ import {createRouter, createWebHistory} from "vue-router"
 import home from "@/pages/home/index.vue";
 import makePhoto from "@/pages/makePhoto/index.vue";
 import generate from "@/pages/generate/index.vue";
+import choosePhoto from "@/pages/choosePhoto/index.vue";
 
 
 // 2. 定义路由配置
@@ -15,6 +16,7 @@ const routes = [
   { path: "/home", component: home },
   { path: "/makePhoto", component: makePhoto },
   { path: "/generate", component: generate },
+  { name: 'choosePhoto', path: "/choosePhoto", component: choosePhoto },
 ];
 
 // 3. 创建路由实例
