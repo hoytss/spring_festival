@@ -6,6 +6,7 @@
 			type="file"
 			accept="image/*"
 			capture="camera"
+			v-show="false"
 			ref="photo"
 			@change="getPhoto"
 		/>
@@ -13,6 +14,7 @@
 			type="file"
 			accept="image/*"
 			ref="uploadImg"
+			v-show="false"
 			@change="chooseImg"
 		/>
 		<div class="imgBox name">
@@ -209,9 +211,28 @@ export default {
 			});
 			// console.log(2223232323232);
 		},
-		getPhoto() {
-			Toast("选择");
-			console.log(2223232323232);
+		getPhoto(e) {
+			let getFile = e.target.files[0];
+			// 将获取的base64图片转成文件
+			// let useTemplate = this.targetTemplate.split("'")[1]
+			// let bob = this.dataUrlToBlob(useTemplate);
+			// let fileAll = this.blobToFile(bob,'filename')
+
+			let useTemplate = this.targetTemplate.split("'")[1]
+			let latestTemplate = useTemplate.split(',')[1]
+			//new 一个FormData格式的参数
+			let params = new FormData();
+			params.append("sourceFile", getFile);
+			params.append("targetFile", latestTemplate);
+
+			// let params = {
+			// 	sourceFile: sourceImg,
+			// 	targetFile: this.$route.query.targetTemplate
+			// }
+			swapFace("post", params).then((res) => {
+				console.log(res);
+				this.testImg = 'data:image/png;base64,'+res.data
+			});
 		},
 		dataUrlToBlob(dataurl) {
 			let arr = dataurl.split(","),
