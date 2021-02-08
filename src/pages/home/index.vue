@@ -195,6 +195,7 @@ export default {
 			.door-left {
 				position: relative;
 				height: 83%;
+				right: -3px;
 				.couplet-left {
 					position: absolute;
 					width: 68px;

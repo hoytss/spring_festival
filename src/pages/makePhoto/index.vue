@@ -1,20 +1,11 @@
 <template>
 	<div class="make-photo">
-		<!-- <van-image :src="bodyPhoto" class="temp" @click="nextStep" />
-		<van-uploader :after-read="afterRead" @click="setup" />
-		<img :src="name111" class="temp" />
-		{{ name111 }} -->
 		<!-- 两端对齐 -->
 		<van-row justify="space-between">
 			<img :src="gobackBtn" class="top-btn" @click="goBack" />
-			<!-- <van-col span="6">
-			</van-col> -->
 			<img :src="nextpage" class="top-btn" @click="nextStep" />
-			<!-- <van-col span="6">
-				
-			</van-col> -->
 		</van-row>
-		<van-row style="min-height: 68%; position: relative;" class="body-wrap">
+		<van-row class="body-wrap">
 			<section style="height: 100%; position: relative;" ref="sourceImg">
 				<div class="head">
 					<img :src="head" class="" />
@@ -26,22 +17,19 @@
 					<img :src="bottom" class="" />
 				</div>
 			</section>
-
 			<!-- 切换性别 -->
-			<!-- <div>
-				<img :src="woman" class="top-btn" @click="chooseSex(1)" v-if="sexSet===0"/>
-				<img :src="man" class="top-btn" @click="chooseSex(0)" v-else/>
-			</div> -->
+			<div class="sex-wrap">
+				<img :src="woman" class="sex-btn" @click="chooseSex(0)" v-if="sexSet===1"/>
+				<img :src="man" class="sex-btn" @click="chooseSex(1)" v-else/>
+			</div>
 		</van-row>
-		<van-row>
-			<img :src="testImg" class="" />
-		</van-row>
-		<van-row justify="flex-start">
+
+		<van-row justify="flex-start" class="operate-btn">
 			<van-col span="2" class="part-wrap">
 				<img :src="hair" class="part" @click="selectPart('head')" />
 				<img :src="coat" class="part" @click="selectPart('top')" />
 				<img :src="pants" class="part" @click="selectPart('bottom')" />
-				<img :src="accessories" class="part" @click="selectPart('head')" />
+				<!-- <img :src="accessories" class="part" @click="selectPart('head')" /> -->
 			</van-col>
 			<van-col span="18" class="part-details-wrap">
 				<div>
@@ -86,11 +74,15 @@ import Man from "@/assets/images/makePhoto/man.png";
 import Woman from "@/assets/images/makePhoto/woman.png";
 
 import Head from "@/assets/images/makePhoto/test_head.png";
-import Top from "@/assets/images/makePhoto/test_top.png";
-import Bottom from "@/assets/images/makePhoto/test_bottom.png";
+import Top from "@/assets/images/makePhoto/female_top_1.png";
+import Bottom from "@/assets/images/makePhoto/female_bottom_1.png";
 
 import Slhead1 from "@/assets/images/makePhoto/sl_head1.png";
 import Slhead2 from "@/assets/images/makePhoto/sl_head2.png";
+// 男 模板默认
+import ManHead from "@/assets/images/makePhoto/male_head_2.png";
+import ManTop from "@/assets/images/makePhoto/male_top_1.png";
+import ManBottom from "@/assets/images/makePhoto/male_bottom_1.png";
 
 export default {
 	name: "home",
@@ -120,7 +112,9 @@ export default {
 			secondRow: [],
 			slhead1: Slhead1,
 			slhead2: Slhead2,
-			testImg: ''
+			manHead: ManHead,
+			manTop: ManTop,
+			manBottom: ManBottom,
 		};
 	},
 	props: {
@@ -202,36 +196,7 @@ export default {
 				scale: 2, // 用于渲染的比例尺。默认为浏览器设备像素比率。默认值是1，手机端设置成2
 				useCORS: true, // 是否尝试使用CORS从服务器加载图像
 			}).then(function (canvas) {
-				console.log(canvas);
 				let dataURL = canvas.toDataURL("image/png");
-				console.log(dataURL);
-				// 转文件
-				// base64转blob
-				// const base64ToBlob = function(base64Data) {
-				// 	let arr = base64Data.split(','),
-				// 		fileType = arr[0].match(/:(.*?);/)[1],
-				// 		bstr = atob(arr[1]),
-				// 		l = bstr.length,
-				// 		u8Arr = new Uint8Array(l);
-						
-				// 	while (l--) {
-				// 		u8Arr[l] = bstr.charCodeAt(l);
-				// 	}
-				// 	return new Blob([u8Arr], {
-				// 		type: fileType
-				// 	});
-				// };
-				// // blob转file
-				// const blobToFile = function(newBlob, fileName) {
-				// 	newBlob.lastModifiedDate = new Date();
-				// 	newBlob.name = fileName;
-				// 	return newBlob;
-				// };
-				// // 调用
-				// const blob = base64ToBlob(dataURL);
-				// const file = blobToFile(blob, 'targetFile');
-				// console.log(blob);
-				// console.log(file);
 
 				let params = {
 					head: that.head,
@@ -239,11 +204,8 @@ export default {
 					bottom: that.bottom,
 					source_template: dataURL
 				}
-				
 				saveTemplateInfo("post", params).then((res) => {
-					// console.log(res);
-					that.testImg = 'data:image/png;base64,'+res.data.transform_img
-					// console.log(that.testImg);
+					console.log(res);
 					router.push({
 						name: "choosePhoto",
 						query: { targetTemplate: 'file'}
@@ -275,9 +237,20 @@ export default {
 		},
 		// 选择性别
 		chooseSex(arg) {
-			console.log(arg);
 			this.sexSet = arg;
-			console.log(this.sexSet);
+			this.firstRow.length = 0;
+			this.secondRow.length = 0;
+			// 更换模版 清空所选的衣服
+			if (arg === 1) {
+				this.head = Head
+				this.top = Top
+				this.bottom = Bottom
+			}else{
+				this.head = ManHead
+				this.top = ManTop
+				this.bottom = ManBottom
+			}
+
 		},
 		addPartInTemplate(args) {
 			if (args.type === 'head') {
@@ -287,11 +260,6 @@ export default {
 			}else if(args.type === 'bottom') {
 				this.bottom = args.artworkUrl
 			}
-			console.log(args.part_id)
-			console.log(args.thumbnailUrl)
-			console.log(args.type)
-			console.log(args.artworkUrl)
-			console.log(args.sex)
 		},
 	},
 };
@@ -307,6 +275,7 @@ export default {
 	}
 	.top-btn {
 		width: 6.25rem;
+		height: 3.125rem;
 		margin: 1.25rem;
 	}
 	.part-wrap {
@@ -342,6 +311,8 @@ export default {
 		}
 	}
 	.body-wrap {
+		position: relative;
+		height: 72%; 
 		.head {
 			width: 100%;
 			img {
@@ -363,9 +334,21 @@ export default {
 				width: 50%;
 				position: relative;
 				z-index: 4;
-				top: -86px;
+				top: -6.375rem;
 			}
 		}
+		.sex-wrap {
+			position: absolute;
+			right: 16px;
+			bottom: 5rem;
+			.sex-btn{
+				width: 4.5rem;
+			}
+		}
+	}
+	.operate-btn {
+		position: relative;
+		z-index: 1111;
 	}
 }
 </style>
