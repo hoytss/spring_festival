@@ -18,7 +18,7 @@
 			@change="chooseImg"
 		/>
 		<div class="imgBox name">
-			<img :src="imgSrc" />
+			<img :src="imgSrc"/>
 		</div>
 		<van-action-sheet
 			v-model:show="show"
@@ -29,7 +29,7 @@
 			@select="onSelect"
 		/>
 		<van-row>
-			<img :src="testImg" class="" />
+			<img :src="testImg" class=""  style="width:100%"/>
 		</van-row>
 		
 	</div>
