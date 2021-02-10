@@ -1,7 +1,9 @@
 <template>
 	<div class="choose-photo">
 		<!-- <van-button type="default" @click="start">开始制作</van-button> -->
-		<van-button type="default" @click="show = true">开始制作</van-button>
+		<van-button type="default" @click="show = true"
+			>请上传您的照片哦~</van-button
+		>
 		<input
 			type="file"
 			accept="image/*"
@@ -17,9 +19,6 @@
 			v-show="false"
 			@change="chooseImg"
 		/>
-		<div class="imgBox name">
-			<img :src="imgSrc"/>
-		</div>
 		<van-action-sheet
 			v-model:show="show"
 			:actions="actions"
@@ -28,10 +27,12 @@
 			@cancel="onCancel"
 			@select="onSelect"
 		/>
-		<van-row>
-			<img :src="testImg" class=""  style="width:100%"/>
+		<van-row class="img-wrap">
+			<img :src="ResultBg" class="result-bg" />
+			<!-- <div class="result-bg" > -->
+			<img :src="testImg" class="result-img" />
+			<!-- </div> -->
 		</van-row>
-		
 	</div>
 </template>
 
@@ -40,6 +41,7 @@ import { Button, Image, Uploader, Row, ActionSheet, Toast } from "vant";
 import { ref, reactive } from "vue"; //, toRefs, reactive
 import router from "../../../router/routes";
 import { swapFace, loadTemplateInfo } from "@/api/makephoto";
+import Result from "@/assets/images/result/result_year.jpg";
 
 export default {
 	name: "home",
@@ -52,17 +54,21 @@ export default {
 	},
 	data() {
 		return {
-			imgSrc: "", //展示的图片路径
 			tupianlist: "", //展示的图片容器,
 			targetTemplate: "",
-			testImg: ''
+			testImg: "",
+			ResultBg: Result,
+			uuid: null,
 		};
 	},
 	props: {
 		msg: String,
 	},
 	mounted() {
-		this.getTemplate();
+		let uuid = localStorage.getItem("uuid");
+		this.uuid = uuid;
+		this.getTemplate(uuid);
+		
 	},
 	setup() {
 		const show = ref(false);
@@ -167,9 +173,9 @@ export default {
 		// };
 	},
 	methods: {
-		async getTemplate() {
+		async getTemplate(uuid) {
 			let params = {
-				user_id: 1,
+				uuid: uuid
 			};
 			await loadTemplateInfo("post", params).then((res) => {
 				if (res.code === 200) {
@@ -194,8 +200,8 @@ export default {
 			// let bob = this.dataUrlToBlob(useTemplate);
 			// let fileAll = this.blobToFile(bob,'filename')
 
-			let useTemplate = this.targetTemplate.split("'")[1]
-			let latestTemplate = useTemplate.split(',')[1]
+			let useTemplate = this.targetTemplate.split("'")[1];
+			let latestTemplate = useTemplate.split(",")[1];
 			//new 一个FormData格式的参数
 			let params = new FormData();
 			params.append("sourceFile", getFile);
@@ -206,8 +212,10 @@ export default {
 			// 	targetFile: this.$route.query.targetTemplate
 			// }
 			swapFace("post", params).then((res) => {
+				if (res.code === 200) {
+					this.testImg = "data:image/png;base64," + res.data;
+				}
 				console.log(res);
-				this.testImg = 'data:image/png;base64,'+res.data
 			});
 			// console.log(2223232323232);
 		},
@@ -218,8 +226,8 @@ export default {
 			// let bob = this.dataUrlToBlob(useTemplate);
 			// let fileAll = this.blobToFile(bob,'filename')
 
-			let useTemplate = this.targetTemplate.split("'")[1]
-			let latestTemplate = useTemplate.split(',')[1]
+			let useTemplate = this.targetTemplate.split("'")[1];
+			let latestTemplate = useTemplate.split(",")[1];
 			//new 一个FormData格式的参数
 			let params = new FormData();
 			params.append("sourceFile", getFile);
@@ -231,7 +239,7 @@ export default {
 			// }
 			swapFace("post", params).then((res) => {
 				console.log(res);
-				this.testImg = 'data:image/png;base64,'+res.data
+				this.testImg = "data:image/png;base64," + res.data;
 			});
 		},
 		dataUrlToBlob(dataurl) {
@@ -256,7 +264,22 @@ export default {
 </script>
 
 <style lang="less" scoped>
-// .choose-photo {
-
-// }
+.choose-photo {
+	.img-wrap {
+		position: relative;
+		.result-bg {
+			width: 100%;
+			// background: url('~@/assets/images/result/result_year.jpg') center center no-repeat;
+			position: absolute;
+			z-index: 1;
+		}
+		.result-img {
+			position: absolute;
+			width: 36%;
+			z-index: 2;
+			top: 40px;
+			left: 35px;
+		}
+	}
+}
 </style>

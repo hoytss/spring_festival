@@ -19,8 +19,13 @@
 			</section>
 			<!-- 切换性别 -->
 			<div class="sex-wrap">
-				<img :src="woman" class="sex-btn" @click="chooseSex(0)" v-if="sexSet===1"/>
-				<img :src="man" class="sex-btn" @click="chooseSex(1)" v-else/>
+				<img
+					:src="woman"
+					class="sex-btn"
+					@click="chooseSex(0)"
+					v-if="sexSet === 1"
+				/>
+				<img :src="man" class="sex-btn" @click="chooseSex(1)" v-else />
 			</div>
 		</van-row>
 
@@ -59,7 +64,12 @@
 import { Button, Image, Uploader, Row } from "vant";
 import { ref, toRefs, reactive } from "vue";
 import router from "../../../router/routes";
-import { deploymentList, uploadFile, getImgPartList, saveTemplateInfo } from "@/api/makephoto";
+import {
+	deploymentList,
+	uploadFile,
+	getImgPartList,
+	saveTemplateInfo,
+} from "@/api/makephoto";
 import html2canvas from "html2canvas";
 import photo from "@/assets/images/make_head.jpg";
 import Goback from "@/assets/images/makePhoto/goback.png";
@@ -115,6 +125,7 @@ export default {
 			manHead: ManHead,
 			manTop: ManTop,
 			manBottom: ManBottom,
+			uuid: null
 		};
 	},
 	props: {
@@ -122,7 +133,11 @@ export default {
 	},
 	mounted() {
 		// 注释掉测试用接口
-		this.getTest();
+		// this.getTest();
+		console.log(this.$route.query.type);
+		let uuid = localStorage.getItem("uuid");
+		console.log(uuid);
+		this.uuid = uuid
 	},
 	setup() {
 		// 在setup中定义template模板使用的响应式变量，你得用ref或者reactive来定义
@@ -138,10 +153,10 @@ export default {
     */
 		// 在vue3.0中，如果你只需要定义一个响应式变量，那么你可以用以下ref
 		// 可能你会疑惑既然是定义变量为什么不用let，var，而用const定义常量的，这里是因为你定义的是一个引用，name指向的永远是一个固定不变的指针地址
-		const name = ref("小哥哥");
+		// const name = ref("小哥哥");
 		const name111 = ref("小哥哥");
 		// 注意点，这里要获取name的值怎么获取,通过定义的变量的。value
-		console.log("拿到name的值：", name.value);
+		// console.log("拿到name的值：", name.value);
 		// 检测某个值是不是响应式的可以用isRef
 
 		// 每次都用.value去拿值的写法，是不是有点不适应，而且定义的变量多了我们也不可能定义一堆ref，看起来都丑
@@ -202,23 +217,27 @@ export default {
 					head: that.head,
 					top: that.top,
 					bottom: that.bottom,
-					source_template: dataURL
-				}
+					source_template: dataURL,
+					type: that.$route.query.type,
+					uuid: that.uuid
+				};
 				saveTemplateInfo("post", params).then((res) => {
 					console.log(res);
-					router.push({
-						name: "choosePhoto",
-						query: { targetTemplate: 'file'}
-					});
+					if (res) {
+						router.push({
+							name: "choosePhoto",
+							query: { type: that.$route.query.type },
+						});
+					}
+					
 				});
 			});
-			
 		},
-		async getTest() {
-			await deploymentList("post", { name: "jhon", age: "18" }).then((res) => {
-				console.log(res);
-			});
-		},
+		// async getTest() {
+		// 	await deploymentList("post", { name: "jhon", age: "18" }).then((res) => {
+		// 		console.log(res);
+		// 	});
+		// },
 		// 选择配件 展示详细
 		async selectPart(args) {
 			// 读取性别
@@ -242,23 +261,22 @@ export default {
 			this.secondRow.length = 0;
 			// 更换模版 清空所选的衣服
 			if (arg === 1) {
-				this.head = Head
-				this.top = Top
-				this.bottom = Bottom
-			}else{
-				this.head = ManHead
-				this.top = ManTop
-				this.bottom = ManBottom
+				this.head = Head;
+				this.top = Top;
+				this.bottom = Bottom;
+			} else {
+				this.head = ManHead;
+				this.top = ManTop;
+				this.bottom = ManBottom;
 			}
-
 		},
 		addPartInTemplate(args) {
-			if (args.type === 'head') {
-				this.head = args.artworkUrl
-			}else if(args.type === 'top') {
-				this.top = args.artworkUrl
-			}else if(args.type === 'bottom') {
-				this.bottom = args.artworkUrl
+			if (args.type === "head") {
+				this.head = args.artworkUrl;
+			} else if (args.type === "top") {
+				this.top = args.artworkUrl;
+			} else if (args.type === "bottom") {
+				this.bottom = args.artworkUrl;
 			}
 		},
 	},
@@ -312,7 +330,7 @@ export default {
 	}
 	.body-wrap {
 		position: relative;
-		height: 72%; 
+		height: 72%;
 		.head {
 			width: 100%;
 			img {
@@ -341,7 +359,7 @@ export default {
 			position: absolute;
 			right: 16px;
 			bottom: 5rem;
-			.sex-btn{
+			.sex-btn {
 				width: 4.5rem;
 			}
 		}

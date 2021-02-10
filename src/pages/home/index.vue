@@ -63,6 +63,7 @@
 import { Button, Image, Dialog, NumberKeyboard, Field } from "vant";
 import { ref } from "vue";
 import router from "../../../router/routes";
+import { saveUserInfo } from "@/api/home";
 import doorLeftImg from "@/assets/images/home/door_right.png";
 import doorRightImg from "@/assets/images/home/door_left.png";
 import LightImg from "@/assets/images/home/light.png";
@@ -102,18 +103,44 @@ export default {
 			openDoorLeft: {},
 			openDoorRight: {},
 			homeNum: null,
+			type: "",
+			user_id: null
 		};
 	},
 	props: {
 		msg: String,
 	},
-	mounted() {},
+	mounted() {
+		const uuid = require("uuid");
+		
+		let useUuid = localStorage.getItem('uuid');
+		if (!useUuid) {
+			this.user_id = uuid.v1();
+			console.log(uuid.v1());
+		}else {
+			this.user_id = useUuid
+		}
+	},
 	methods: {
-		nextStep() {
-			router.push("/makePhoto");
+		async nextStep() {
+			
+			let params = {
+				uuid: this.user_id,
+				family_count: +this.value,
+			}
+			await saveUserInfo("post", params).then((res) => {
+				if (res.code === 200) {
+					let uuid = localStorage.getItem('uuid');
+					if (!uuid) {
+						localStorage.setItem('uuid',this.user_id);
+					}
+					router.push({ path: "/makePhoto", query: { type: this.type } });
+				}
+			});
 		},
 		// 选择类型+开门
 		openTheDoor(arg) {
+			this.type = arg;
 			// 检测是否选择家庭人数
 			if (this.value === "") {
 				Dialog.alert({
@@ -146,7 +173,6 @@ export default {
 					this.nextStep();
 				}, 2000);
 			}
-			console.log(arg);
 		},
 	},
 };
